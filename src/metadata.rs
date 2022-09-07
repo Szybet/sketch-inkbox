@@ -11,14 +11,12 @@ use serde::{Serialize, Deserialize};
 use lazy_static::lazy_static;
 use titlecase::titlecase;
 use crate::geom::Point;
-/* 
 use crate::document::{Document, SimpleTocEntry, TextLocation};
 use crate::document::asciify;
 use crate::document::epub::EpubDocument;
 use crate::document::html::HtmlDocument;
 use crate::document::pdf::PdfOpener;
 use crate::document::djvu::DjvuOpener;
-*/
 
 use crate::helpers::datetime_format;
 
@@ -59,8 +57,8 @@ pub struct Info {
     pub reader: Option<ReaderInfo>,
     #[serde(skip_serializing_if = "Option::is_none", skip_deserializing)]
     pub _reader: Option<ReaderInfo>,
-    //#[serde(skip_serializing_if = "Option::is_none")]
-    //pub toc: Option<Vec<SimpleTocEntry>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub toc: Option<Vec<SimpleTocEntry>>,
     #[serde(with = "datetime_format")]
     pub added: DateTime<Local>,
 }
@@ -90,7 +88,7 @@ pub struct Annotation {
     pub note: String,
     #[serde(skip_serializing_if = "String::is_empty")]
     pub text: String,
-    //pub selection: [TextLocation; 2],
+    pub selection: [TextLocation; 2],
     #[serde(with = "datetime_format")]
     pub modified: DateTime<Local>,
 }
@@ -100,7 +98,7 @@ impl Default for Annotation {
         Annotation {
             note: String::new(),
             text: String::new(),
-            //selection: [TextLocation::Dynamic(0), TextLocation::Dynamic(1)],
+            selection: [TextLocation::Dynamic(0), TextLocation::Dynamic(1)],
             modified: Local::now(),
         }
     }
@@ -316,7 +314,7 @@ impl Default for Info {
             added: Local::now(),
             reader: None,
             _reader: None,
-            //toc: None,
+            toc: None,
         }
     }
 }

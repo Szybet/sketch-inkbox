@@ -6,7 +6,7 @@ use crate::framebuffer::{Framebuffer, Pixmap, UpdateMode};
 use super::{View, Event, Hub, Bus, Id, ID_FEEDER, RenderQueue, RenderData, ViewId, Align};
 use crate::gesture::GestureEvent;
 use crate::input::{DeviceEvent, FingerStatus};
-//use crate::document::pdf::PdfOpener;
+use crate::document::pdf::PdfOpener;
 use crate::color::{TEXT_NORMAL, TEXT_INVERTED_HARD};
 use crate::unit::scale_by_dpi_raw;
 use crate::geom::{Rectangle, CornerSpec};
@@ -29,9 +29,9 @@ lazy_static! {
                      "font_size", "line_height", "align-justify", "align-left", "align-right",
                      "align-center", "margin", "plug", "cover", "enclosed_menu", "contrast", "gray"].iter().cloned() {
             let path = dir.join(&format!("{}.svg", name));
-            //let doc = PdfOpener::new().and_then(|o| o.open(path)).unwrap();
-            //let pixmap = doc.page(0).and_then(|p| p.pixmap(scale)).unwrap();
-            //m.insert(name, pixmap);
+            let doc = PdfOpener::new().and_then(|o| o.open(path)).unwrap();
+            let pixmap = doc.page(0).and_then(|p| p.pixmap(scale)).unwrap();
+            m.insert(name, pixmap);
         }
         m
     };
