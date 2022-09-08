@@ -1,57 +1,43 @@
-# Description
-
-This is a drawing program that is meant to be run on a *Kobo* e-reader.
-
-It has only been tested on the *Glo HD* and the *Aura ONE*.
-
-# Installation
-
-First install [fmon](https://github.com/baskerville/fmon).
-
-And then issue: `unzip sketch.zip -d SD_ROOT`.
-
-# Usage
-
-Use your fingers to draw.
-
-A short press/release of the power button will:
-
-- Save and clear the canvas if it isn't empty.
-- Quit if it's empty.
-
-A long press/release (held more than 2 seconds) of the power button will inverse the displayed colors.
-
-# Configuration
-
-If the touch feedback doesn't match the position of your fingers, add the following:
+# All Credit goes to the original creator, baskerville
+### Sketch program from plato, ported to inkbox os
+# Compilation
+get this docker image:
 ```
-export SKETCH_UNSWAP_XY=1
-export SKETCH_UNMIRROR_X=1
+docker pull ghcr.io/cross-rs/arm-unknown-linux-gnueabihf:edge
 ```
-in `sketch.sh` after `export PRODUCT…`.
-
-# Building
-
-The OS used on the *Kobo* devices is *Linaro 2011.07*.
-
-In order to build for this OS / architecture you can, for example, install *Ubuntu LTS 12.04* (the *GLIBC* version must be old enough) in a VM and install the following package: `gcc-4.6-arm-linux-gnueabihf`.
-
-Install the appropriate target:
-```sh
+run distrobox on it:
+```
+distrobox create --image ghcr.io/cross-rs/arm-unknown-linux-gnueabihf:edge
+distrobox enter arm-unknown-linux-gnueabihf-edge
+```
+copy libraries from libs the toolchain dirs:
+```
+/x-tools/arm-unknown-linux-gnueabihf
+/lib/
+/x-tools/arm-unknown-linux-gnueabihf
+/arm-unknown-linux-gnueabihf/lib/
+/x-tools/arm-unknown-linux-gnueabihf
+/arm-unknown-linux-gnueabihf/sysroot/lib/
+```
+enter root, and copy the PATH variable from the first user, then install rustup:
+```
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
+add the rust target:
+```
 rustup target add arm-unknown-linux-gnueabihf
 ```
-
-Append this:
-```toml
+and build it:
+```
+cargo build --target arm-unknown-linux-gnueabihf --release
+```
+Maybe also needed, add this too `.cargo/config`
+```
 [target.arm-unknown-linux-gnueabihf]
 linker = "arm-linux-gnueabihf-gcc"
 ```
-to `~/.cargo/config`.
-
-The binary can then be generated with:
-```sh
+Propably a better way to compile all of this:
+```
 cargo rustc --release --target=arm-unknown-linux-gnueabihf -- -C target-feature=+v7,+vfp3,+a9,+neon
 ```
-
-You can tell what features are supported by your device from the output of `cat /proc/cpuinfo`.
-
+Copy everything from needed-files to the same dir as the binary, libs too and thats should be it

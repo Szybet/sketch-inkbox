@@ -2,6 +2,7 @@ use std::fs::{self, File};
 use std::path::PathBuf;
 use fxhash::FxHashMap;
 use chrono::Local;
+use libc::exit;
 use walkdir::WalkDir;
 use globset::Glob;
 use anyhow::Error;
@@ -72,9 +73,9 @@ impl Sketch {
                         .corners(Some(CornerSpec::Uniform(border_radius)));
         children.push(Box::new(icon) as Box<dyn View>);
 
-        //let save_path = context.library.home.join(&context.settings.sketch.save_path);
+        // let save_path = context.library.home.join(&context.settings.sketch.save_path);
         // changed ~Szybet
-        let save_path = PathBuf::new();
+        let save_path = PathBuf::from("/mnt/onboard/onboard/sketches/");
 
         rq.add(RenderData::new(id, rect, UpdateMode::Full));
         Sketch {
@@ -90,6 +91,7 @@ impl Sketch {
     }
 
     fn toggle_title_menu(&mut self, rect: Rectangle, enable: Option<bool>, rq: &mut RenderQueue, context: &mut Context) {
+        println!("locate_by_id(self, ViewId::SketchMenu) is: {:?}", locate_by_id(self, ViewId::SketchMenu));
         if let Some(index) = locate_by_id(self, ViewId::SketchMenu) {
             if let Some(true) = enable {
                 return;
@@ -248,6 +250,7 @@ impl View for Sketch {
                 true
             },
             Event::ToggleNear(ViewId::TitleMenu, rect) => {
+                println!("ToggleNear called in sketch");
                 self.toggle_title_menu(rect, None, rq, context);
                 true
             },
@@ -301,8 +304,11 @@ impl View for Sketch {
                 true
             },
             Event::Select(EntryId::Quit) => {
+                hub.send(Event::Select(EntryId::Quit));
+                /* 
                 self.quit(context);
                 hub.send(Event::Back).ok();
+                */
                 true
             },
             _ => false,

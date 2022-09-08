@@ -33,16 +33,16 @@ use lightsensor::*;
 use settings::*;
 
 use sketch::Sketch;
-use view::Event;
-use view::View;
+use view::common::*;
+use view::menu::*;
 use view::{handle_event, process_render_queue, wait_for_all};
+use view::{AppCmd, EntryId, EntryKind, Event, RenderData, RenderQueue, UpdateData, View, ViewId};
 
 use std::collections::VecDeque;
 use std::path::Path;
 use std::sync::mpsc::{self, Receiver, Sender};
 use std::thread;
 use std::time::{Duration, Instant};
-use view::RenderQueue;
 
 const FB_DEVICE: &str = "/dev/fb0";
 
@@ -92,10 +92,12 @@ fn main() {
     let mut rq = RenderQueue::new();
     let mut context: Context = Context::new(fb, settings, fonts, battery, frontlight, lightsensor);
 
-    println!("Sketch is running on a Kobo {}.",
-                                            CURRENT_DEVICE.model);
-    println!("The framebuffer resolution is {} by {}.", context.fb.rect().width(),
-                                                        context.fb.rect().height());
+    println!("Sketch is running on a Kobo {}.", CURRENT_DEVICE.model);
+    println!(
+        "The framebuffer resolution is {} by {}.",
+        context.fb.rect().width(),
+        context.fb.rect().height()
+    );
 
     let mut paths = Vec::new();
     for ti in &TOUCH_INPUTS {
@@ -153,6 +155,19 @@ fn main() {
 
     while let Ok(evt) = rx.recv() {
         match evt {
+            Event::Select(EntryId::Quit) => {
+                println!("Received quit message");
+                // This doesnt work, clearing the screen after exit needs to be done outside
+                //context.fb.set_monochrome(true);
+                break;
+            }
+            Event::Close(id) => {
+                if let Some(index) = locate_by_id(view.as_ref(), id) {
+                    let rect = overlapping_rectangle(view.child(index));
+                    rq.add(RenderData::expose(rect, UpdateMode::Gui));
+                    view.children_mut().remove(index);
+                }
+            },
             _ => {
                 handle_event(view.as_mut(), &evt, &tx, &mut bus, &mut rq, &mut context);
             }
@@ -164,4 +179,5 @@ fn main() {
             tx.send(ce).ok();
         }
     }
+    println!("Exiting");
 }

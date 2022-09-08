@@ -37,3 +37,10 @@ rand_core = "0.6.3"
 rand_xoshiro = "0.6.0"
 percent-encoding = "2.1.0"
 chrono = { version = "0.4.22", features = ["serde"] }
+
+[profile.release]
+panic = "abort"
+codegen-units = 1
+opt-level = "z"
+lto = true
+strip = true
