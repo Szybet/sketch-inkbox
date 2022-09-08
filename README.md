@@ -12,12 +12,9 @@ distrobox enter arm-unknown-linux-gnueabihf-edge
 ```
 copy libraries from libs the toolchain dirs:
 ```
-/x-tools/arm-unknown-linux-gnueabihf
-/lib/
-/x-tools/arm-unknown-linux-gnueabihf
-/arm-unknown-linux-gnueabihf/lib/
-/x-tools/arm-unknown-linux-gnueabihf
-/arm-unknown-linux-gnueabihf/sysroot/lib/
+/x-tools/arm-unknown-linux-gnueabihf/lib/
+/x-tools/arm-unknown-linux-gnueabihf/arm-unknown-linux-gnueabihf/lib/
+/x-tools/arm-unknown-linux-gnueabihf/arm-unknown-linux-gnueabihf/sysroot/lib/
 ```
 enter root, and copy the PATH variable from the first user, then install rustup:
 ```
