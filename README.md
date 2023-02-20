@@ -38,3 +38,7 @@ Propably a better way to compile all of this:
 cargo rustc --release --target=arm-unknown-linux-gnueabihf -- -C target-feature=+v7,+vfp3,+a9,+neon
 ```
 Copy everything from needed-files to the same dir as the binary, libs too and thats should be it
+
+Also launch with the PRODUCT env variable. Look up `device.rs`. For Nia it's `luna`
+
+The default save path is `/mnt/onboard/onboard/sketches/` and it can be overwriten by providing one argument, which must be a valid path and not `/`

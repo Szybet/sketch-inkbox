@@ -222,9 +222,9 @@ pub struct Pen {
 impl Default for Pen {
     fn default() -> Self {
         Pen {
-            size: 2,
+            size: 15,
             color: BLACK,
-            dynamic: true,
+            dynamic: false,
             amplitude: 4.0,
             min_speed: 0.0,
             max_speed: mm_to_px(254.0, CURRENT_DEVICE.dpi),

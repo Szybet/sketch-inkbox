@@ -16,6 +16,9 @@ pub use self::kobo1::KoboFramebuffer1;
 pub use self::kobo2::KoboFramebuffer2;
 pub use self::image::Pixmap;
 
+use std::fs::File;
+use std::io::Read;
+
 #[derive(Debug, Copy, Clone)]
 pub struct Display {
     pub dims: (u32, u32),
@@ -62,7 +65,15 @@ pub trait Framebuffer {
     }
 
     fn rotation(&self) -> i8 {
-        0
+        let mut f = File::open("/sys/class/graphics/fb0/rotate");
+        let response = match f {
+            Ok(mut res) => {
+                let mut s = String::new();
+                res.read_to_string(&mut s).unwrap();
+                return s.parse::<i8>().unwrap();
+            }
+            Err(err) => return 0,
+          };
     }
 
     fn dims(&self) -> (u32, u32) {

@@ -57,7 +57,6 @@ const BUTTON_INPUTS: [&str; 4] = [
     "/dev/input/by-path/platform-mxckpd-event",
     "/dev/input/event0",
 ];
-const POWER_INPUT: &str = "/dev/input/by-path/platform-bd71828-pwrkey-event";
 const CLOCK_REFRESH_INTERVAL: Duration = Duration::from_secs(60);
 const BATTERY_REFRESH_INTERVAL: Duration = Duration::from_secs(299);
 
@@ -85,9 +84,7 @@ fn main() {
     };
     let initial_rotation = CURRENT_DEVICE.transformed_rotation(fb.rotation());
     let startup_rotation = CURRENT_DEVICE.startup_rotation();
-    if !CURRENT_DEVICE.has_gyroscope() && initial_rotation != startup_rotation {
-        fb.set_rotation(startup_rotation).ok();
-    }
+    fb.set_rotation(initial_rotation).ok();
 
     let mut rq = RenderQueue::new();
     let mut context: Context = Context::new(fb, settings, fonts, battery, frontlight, lightsensor);
@@ -112,10 +109,6 @@ fn main() {
             break;
         }
     }
-    if Path::new(POWER_INPUT).exists() {
-        paths.push(POWER_INPUT.to_string());
-    }
-
     let (raw_sender, raw_receiver) = raw_events(paths);
 
     let touch_screen = gesture_events(device_events(

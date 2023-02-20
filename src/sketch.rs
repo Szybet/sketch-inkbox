@@ -75,7 +75,15 @@ impl Sketch {
 
         // let save_path = context.library.home.join(&context.settings.sketch.save_path);
         // changed ~Szybet
-        let save_path = PathBuf::from("/mnt/onboard/onboard/sketches/");
+        let mut save_path = PathBuf::from("/mnt/onboard/onboard/sketches/");
+
+        let args: Vec<String> = std::env::args().collect();
+        if args.len() == 2 {
+            save_path = PathBuf::from(args.last().unwrap());
+            println!("Save path took from argument: {}", args.last().unwrap());
+        } else {
+            println!("Save path is default");
+        }
 
         rq.add(RenderData::new(id, rect, UpdateMode::Full));
         Sketch {
@@ -84,7 +92,7 @@ impl Sketch {
             children,
             pixmap: Pixmap::new(rect.width(), rect.height()),
             fingers: FxHashMap::default(),
-            pen: context.settings.sketch.pen.clone(),
+            pen: Pen::default(),
             save_path,
             filename: Local::now().format(FILENAME_PATTERN).to_string(),
         }
