@@ -1,2 +1,4 @@
 target/
 **/*.rs.bk
+inkbox_userapp/sketch/app-bin/sketch.bin
+*.isa*

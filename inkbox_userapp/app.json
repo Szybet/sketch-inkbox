@@ -1,0 +1,13 @@
+{
+  "app": {
+    "Author": "Szybet / baskerville",
+    "AuthorContact": "https://github.com/Szybet/sketch-inkbox / https://github.com/baskerville/plato",
+    "Enabled": true,
+    "ExecPath": "/app-bin/sketch.sh",
+    "IconPath": "/app-misc/sketch.svg",
+    "Name": "sketch",
+    "SupportedDevices": [ "n705", "n905b", "n905c", "n613", "n236", "n437", "n306" ],
+    "RequiredFeatures": [ ],
+    "Version": "0.4.0"
+  }
+}
